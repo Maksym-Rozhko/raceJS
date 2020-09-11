@@ -1,3 +1,5 @@
+'use strict'
+
 const MAX_ENEMY = 8;
 const HEIGHT_ELEM = 100;
 
@@ -34,21 +36,23 @@ const setting = {
 
 let level = setting.level;
 
-let record = parseInt(localStorage.getItem('nfjs_score', setting.score));
-topScore.textContent = record ? record : 0;
+const getLocalStorage = () => parseInt(localStorage.getItem('nfjs_score', setting.score));
+topScore.textContent = getLocalStorage() ? 'RECORD' + ' ' + getLocalStorage() : 0;
 
 const addLocalStorage = () => {
-    localStorage.setItem('nfjs_score', 'SCORE' + ' ' + setting.score);
-    topScore.textContent = 'SCORE' + ' ' + setting.score;
+    const record = getLocalStorage();
+    if (!record || record < setting.score) {
+        localStorage.setItem('nfjs_score', setting.score);
+        topScore.textContent = 'NEW RECORD' + ' ' + setting.score;
+    }
 }
 
-function getQuantityElements(heightElement) {
-    return (gameArea.offsetHeight / heightElement) + 1; // потестить убрать (+1);
-}
+const getQuantityElements = heightElement => (gameArea.offsetHeight / heightElement) + 1; // потестить убрать (+1);
 
 
 
-function startGame(event) {
+
+const startGame = event => {
 
     const target = event.target;
     if (target === start) return;
@@ -103,7 +107,7 @@ function startGame(event) {
     requestAnimationFrame(playGame); 
 }
 
-function playGame() {
+const playGame = () => {
 
     setting.level = Math.floor(setting.score / 1000);
     if (setting.level !== level) {
@@ -135,21 +139,21 @@ function playGame() {
     }
 }
 
-function startRun(event) {
+const startRun = event => {
     if (keys.hasOwnProperty(event.key)) {
         event.preventDefault();
         keys[event.key] = true;
     }
 }
 
-function stopRun(event) {
+const stopRun = event => {
     if (keys.hasOwnProperty(event.key)) {
         event.preventDefault();
         keys[event.key] = false;
     }
 }
 
-function moveRoad() {
+const moveRoad = () => {
     let lines = document.querySelectorAll('.line');
     lines.forEach(function(line) {
         line.y += setting.speed;
@@ -161,7 +165,7 @@ function moveRoad() {
     });
 }
 
-function moveEnemy() {
+const moveEnemy = () => {
     let enemy = document.querySelectorAll('.enemy');
 
     enemy.forEach(function(item) {
